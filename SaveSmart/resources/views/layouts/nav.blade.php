@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
     <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
-      <a class="navbar-brand" href="#page-top">Celine Is Awesome</a>
+      <a class="navbar-brand" href="#page-top">SaveSmart</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -27,10 +27,10 @@
             <a class="nav-link" href="#about">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#team">Connexion</a>
+            <a class="nav-link" href="{{route('login')}}">Connexion</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#contact">inscreption</a>
+            <a class="nav-link" href="{{route('register')}}">inscreption</a>
           </li>
         </ul>
       </div>

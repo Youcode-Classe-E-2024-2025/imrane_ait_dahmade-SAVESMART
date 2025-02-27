@@ -1,7 +1,10 @@
+@extends('layouts.app');
+
+@section('content')
 <div class="card p-4 shadow-lg rounded" style="width: 350px;">
     <h3 class="text-center mb-3">Connexion</h3>
-    
-    <form>
+
+    <form action="{{route('login')}}"  method="POST">
       <div class="mb-3">
         <label for="email" class="form-label">Adresse Email</label>
         <input type="email" class="form-control" id="email" placeholder="Entrez votre email" required>
@@ -15,9 +18,11 @@
       <div class="d-grid">
         <button type="submit" class="btn btn-primary">Se connecter</button>
       </div>
-
+      
       <div class="text-center mt-3">
         <a href="#">Mot de passe oublié ?</a>
       </div>
     </form>
   </div>
+@endsection
+

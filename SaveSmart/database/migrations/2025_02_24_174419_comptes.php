@@ -13,10 +13,10 @@ return new class extends Migration
     {
        Schema::create('Comptes',function(Blueprint $table){
         $table->id();
-        $table->primary('id');
+       
         $table->string('email');
         $table->string('password');
-        $table->timestamp('DateCreation')->default(now());
+        $table->timestamps();
 
        });
 

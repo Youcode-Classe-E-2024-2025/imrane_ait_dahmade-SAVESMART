@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('password');
-            
+            $table->timestamp('DateCreation')->useCurrent();
+          
       });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        schema::dropIfExists('users');
     }
 };

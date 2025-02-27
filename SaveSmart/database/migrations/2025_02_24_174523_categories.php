@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaction',function(Blueprint $table){
+        Schema::create('categories',function(Blueprint $table){
             $table->id();
-            $table->string('montant');
-            $table->string('type');
-            $table->timestamp('Date_transaction')->default(now());
-            $table->primary('id');
-            $table->string('categorie_id');
-            $table->foreign('categorie_id')->references('id')->on('categories');
+            $table->string('nom');
+         
         });
     }
 
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('categories');
     }
 };
