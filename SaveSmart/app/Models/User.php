@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'comptes';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'family_id'
     ];
 
     /**
@@ -42,4 +45,39 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function family()
+    {
+        return $this->belongsTo(Family::class);
+    }
+
+    public function ownedFamily()
+    {
+        return $this->hasOne(Family::class, 'owner_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Categorie::class);
+    }
+
+    public function availableProfiles()
+    {
+        return $this->family ? Profile::where('family_id', $this->family_id)->get() : collect();
+    }
+
+    public function isOwnerOfFamily()
+    {
+        return $this->ownedFamily()->exists();
+    }
+
+    public function isMemberOfFamily()
+    {
+        return $this->family_id !== null;
+    }
 }

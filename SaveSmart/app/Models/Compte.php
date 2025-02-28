@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Compte extends Model
+class Compte extends Authenticatable
 {
-    use HasFactory;
-    protected $table = 'Comptes'; 
+    use HasApiTokens, Notifiable;
 
-    
-protected $fillable = [  
-        'email',
-        'password',
-    ];
-        public $timestamps = false; // Désactive les timestamps
-    
-    
+    protected $table = 'Comptes'; // Correction du nom de la table avec majuscule
+
+    protected $fillable = ['email', 'password']; // Ajoute les colonnes que tu veux rendre modifiables
+
+    protected $hidden = ['password']; // Cache le mot de passe
+
+    public $timestamps = false; // Si ta table n'a pas de created_at / updated_at
 }

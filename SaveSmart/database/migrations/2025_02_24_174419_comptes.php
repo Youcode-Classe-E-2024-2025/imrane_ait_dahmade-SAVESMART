@@ -11,15 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('Comptes',function(Blueprint $table){
-        $table->id();
-       
-        $table->string('email');
-        $table->string('password');
-        $table->timestamps();
-
-       });
-
+        // Cette migration n'est plus nécessaire car la table est créée dans 2014_10_12_000000_create_users_table.php
     }
 
     /**
@@ -27,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-       Schema::dropIfExists('Comptes');
+        // Cette migration n'est plus nécessaire
     }
 };

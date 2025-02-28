@@ -13,10 +13,11 @@ return [
     |
     */
 
-    'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
-    ],
+   'defaults' => [
+    'guard' => 'web',
+    'passwords' => 'users', 
+],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -60,10 +61,13 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
+       
+    'users' => [ 
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class, 
+        'table' => 'comptes',
+    ],
+
 
         // 'users' => [
         //     'driver' => 'database',
