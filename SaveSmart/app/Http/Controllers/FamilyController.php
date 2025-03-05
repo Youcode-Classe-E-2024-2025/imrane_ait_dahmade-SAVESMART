@@ -3,10 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Family;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class FamilyController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+        $family = $user->family;
+        $members = $family ? $family->users : collect();
+
+        return view('families.index', compact('family', 'members'));
+    }
+
     public function create()
     {
         return view('families.create');
@@ -14,64 +26,62 @@ class FamilyController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        $family = Family::create([
-            'name' => $request->name,
-            'owner_id' => auth()->id(),
+        $family = Family::create($validated);
+
+        $user = Auth::user();
+        $user->family_id = $family->id;
+        $user->is_family_admin = true;
+        $user->save();
+
+        return redirect()->route('families.index')->with('success', 'Famille créée avec succès.');
+    }
+
+    public function addMember()
+    {
+        return view('families.add-member');
+    }
+
+    public function storeMember(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Mettre à jour l'utilisateur actuel avec le family_id
-        auth()->user()->update(['family_id' => $family->id]);
+        $user = Auth::user();
+        $family = $user->family;
 
-        return redirect()->route('profile.edit')
-            ->with('success', 'Compte familial créé avec succès.');
-    }
+        if (!$family) {
+            return redirect()->route('families.index')->with('error', 'Vous devez d\'abord créer une famille.');
+        }
 
-    public function invite(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:comptes,email',
+        $newMember = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'family_id' => $family->id,
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        
-        if ($user->family_id) {
-            return back()->with('error', 'Cet utilisateur fait déjà partie d\'une famille.');
-        }
-
-        $user->update(['family_id' => auth()->user()->family_id]);
-
-        return back()->with('success', 'Membre ajouté à la famille avec succès.');
+        return redirect()->route('families.index')->with('success', 'Membre ajouté avec succès.');
     }
 
-    public function leave()
+    public function removeMember(User $member)
     {
-        $user = auth()->user();
-        
-        if ($user->isOwnerOfFamily()) {
-            return back()->with('error', 'Le propriétaire ne peut pas quitter la famille. Supprimez la famille ou transférez la propriété.');
+        $user = Auth::user();
+
+        if (!$user->is_family_admin || $user->family_id !== $member->family_id) {
+            return redirect()->route('families.index')->with('error', 'Vous n\'avez pas les droits pour effectuer cette action.');
         }
 
-        $user->update(['family_id' => null]);
+        $member->family_id = null;
+        $member->save();
 
-        return redirect()->route('profile.edit')
-            ->with('success', 'Vous avez quitté le compte familial.');
-    }
-
-    public function destroy()
-    {
-        $user = auth()->user();
-        
-        if (!$user->isOwnerOfFamily()) {
-            return back()->with('error', 'Seul le propriétaire peut supprimer la famille.');
-        }
-
-        $user->ownedFamily->delete();
-
-        return redirect()->route('profile.edit')
-            ->with('success', 'Compte familial supprimé avec succès.');
+        return redirect()->route('families.index')->with('success', 'Membre retiré avec succès.');
     }
 }
+

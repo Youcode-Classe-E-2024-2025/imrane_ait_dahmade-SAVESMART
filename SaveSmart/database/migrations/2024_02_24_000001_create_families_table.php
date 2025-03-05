@@ -11,7 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Cette migration n'est plus nécessaire car la table est créée dans 2014_10_12_000000_create_users_table.php
+        Schema::create('families', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Cette migration n'est plus nécessaire
+        Schema::dropIfExists('families');
     }
 };
+

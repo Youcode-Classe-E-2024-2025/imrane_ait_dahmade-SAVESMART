@@ -11,21 +11,16 @@ class Family extends Model
 
     protected $fillable = [
         'name',
-        'owner_id'
     ];
 
-    public function owner()
-    {
-        return $this->belongsTo(User::class, 'owner_id');
-    }
-
-    public function members()
+    public function users()
     {
         return $this->hasMany(User::class);
     }
 
-    public function profiles()
+    public function admin()
     {
-        return $this->hasMany(Profile::class);
+        return $this->users()->where('is_family_admin', true)->first();
     }
 }
+

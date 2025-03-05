@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Transaction;
+use App\Models\Goal;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TransactionPolicy
+class GoalPolicy
 {
     use HandlesAuthorization;
 
@@ -21,9 +21,9 @@ class TransactionPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Transaction $transaction): bool
+    public function view(User $user, Goal $goal): bool
     {
-        return $user->id === $transaction->user_id;
+        return $user->id === $goal->user_id;
     }
 
     /**
@@ -37,17 +37,17 @@ class TransactionPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Transaction $transaction): bool
+    public function update(User $user, Goal $goal): bool
     {
-        return $user->id === $transaction->user_id;
+        return $user->id === $goal->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Transaction $transaction): bool
+    public function delete(User $user, Goal $goal): bool
     {
-        return $user->id === $transaction->user_id;
+        return $user->id === $goal->user_id;
     }
 }
 

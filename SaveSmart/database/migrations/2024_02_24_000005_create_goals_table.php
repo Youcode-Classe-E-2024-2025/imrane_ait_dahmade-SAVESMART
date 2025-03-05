@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('goals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('color', 7);
-            $table->foreignId('user_id')->references('id')->on('comptes')->onDelete('cascade');
+            $table->decimal('target_amount', 10, 2);
+            $table->decimal('current_amount', 10, 2)->default(0);
+            $table->date('deadline');
+            $table->text('description')->nullable();
+            $table->string('icon')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +29,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('goals');
     }
 };
+

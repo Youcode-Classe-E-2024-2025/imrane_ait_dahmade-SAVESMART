@@ -10,17 +10,17 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type',
-        'montant',
+        'user_id',
+        'category_id',
+        'amount',
         'description',
         'date',
-        'categorie_id',
-        'user_id',
+        'type', // 'income' or 'expense'
     ];
 
     protected $casts = [
         'date' => 'date',
-        'montant' => 'decimal:2',
+        'amount' => 'decimal:2',
     ];
 
     public function user()
@@ -28,8 +28,19 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function categorie()
+    public function category()
     {
-        return $this->belongsTo(Categorie::class);
+        return $this->belongsTo(Category::class);
+    }
+
+    public function scopeIncome($query)
+    {
+        return $query->where('type', 'income');
+    }
+
+    public function scopeExpense($query)
+    {
+        return $query->where('type', 'expense');
     }
 }
+
