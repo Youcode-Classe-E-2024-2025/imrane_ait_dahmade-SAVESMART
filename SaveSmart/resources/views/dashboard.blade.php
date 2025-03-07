@@ -4,6 +4,19 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6">Tableau de bord</h1>
     
+    <!-- Debug Information -->
+    @if(config('app.debug'))
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <p class="font-bold">Debug Information:</p>
+        <p>Income: {{ $income }}</p>
+        <p>Expenses: {{ $expenses }}</p>
+        <p>Balance: {{ $balance }}</p>
+        <p>Budget Plan: {{ json_encode($budgetPlan) }}</p>
+        <p>Category Spending: {{ json_encode($categorySpending) }}</p>
+        <p>Goals: {{ json_encode($goals) }}</p>
+    </div>
+    @endif
+    
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Résumé financier -->
         <div class="bg-white rounded-lg shadow p-6">
@@ -30,33 +43,22 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h2 class="text-xl font-semibold mb-4">Budget 50/30/20</h2>
             <div class="space-y-4">
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-gray-600">Besoins (50%)</span>
-                        <span class="font-medium">{{ number_format($budgetPlan['needs']['amount'], 2) }} €</span>
+                @foreach($budgetPlan as $type => $data)
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-600">{{ ucfirst($type) }} ({{ $data['percentage'] }}%)</span>
+                            <span class="font-medium">{{ number_format($data['amount'], 2) }} €</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="h-2.5 rounded-full" style="width: {{ $data['percentage'] }}%; background-color: 
+                                @if($type == 'needs') #3B82F6
+                                @elseif($type == 'wants') #8B5CF6
+                                @else #10B981
+                                @endif
+                            "></div>
+                        </div>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 50%"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-gray-600">Envies (30%)</span>
-                        <span class="font-medium">{{ number_format($budgetPlan['wants']['amount'], 2) }} €</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-purple-600 h-2.5 rounded-full" style="width: 30%"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-gray-600">Épargne (20%)</span>
-                        <span class="font-medium">{{ number_format($budgetPlan['savings']['amount'], 2) }} €</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-green-600 h-2.5 rounded-full" style="width: 20%"></div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
         
@@ -133,3 +135,4 @@
     </div>
 </div>
 @endsection
+

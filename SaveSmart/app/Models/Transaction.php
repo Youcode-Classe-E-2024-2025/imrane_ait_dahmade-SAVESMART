@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Transaction extends Model
 {
@@ -23,6 +24,11 @@ class Transaction extends Model
         'amount' => 'decimal:2',
     ];
 
+    public function setDateAttribute($value)
+    {
+        $this->attributes['date'] = Carbon::parse($value)->format('Y-m-d');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -41,6 +47,12 @@ class Transaction extends Model
     public function scopeExpense($query)
     {
         return $query->where('type', 'expense');
+    }
+
+    public function scopeThisMonth($query)
+    {
+        return $query->whereMonth('date', Carbon::now()->month)
+                    ->whereYear('date', Carbon::now()->year);
     }
 }
 
